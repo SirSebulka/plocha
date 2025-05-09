@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moje Webová Plocha</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #008080; /* Teal - typická barva pozadí Windows XP */
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Aby se zabránilo rolování */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .desktop {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px; /* Trochu místa nahoře */
+        }
+
+        .icons-container {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .icon-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #eee;
+            cursor: pointer;
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+            padding: 20px;
+            background-color: rgba(51, 51, 51, 0.7);
+            border-radius: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .icon:hover {
+            background-color: rgba(85, 85, 85, 0.7);
+        }
+
+        .window {
+            position: absolute;
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            display: none; /* Skryto na začátku */
+        }
+
+        .window-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .window-close {
+            cursor: pointer;
+            font-size: 1.2em;
+            color: #888;
+            transition: color 0.2s ease;
+        }
+
+        .window-close:hover {
+            color: #000;
+        }
+
+        #calculator-window {
+            /* Umístění a styl kalkulačky - upraveno pro širší zobrazení */
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            width: auto; /* Automatická šířka */
+            max-width: 350px;
+        }
+
+        #video-player-window {
+            /* Umístění a styl přehrávače - upraveno pro širší zobrazení */
+            top: 100px;
+            left: 10%;
+            width: 80%;
+            max-width: 800px;
+            height: auto; /* Automatická výška */
+        }
+
+        #video-player-window video {
+            display: block; /* Aby se video chovalo jako blokový element */
+            max-width: 100%; /* Maximální šířka 100% kontejneru */
+            height: auto; /* Automatická výška pro zachování poměru stran */
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        #notes-window {
+            /* Umístění a styl poznámek - upraveno pro širší zobrazení */
+            top: 50%;
+            right: 10%;
+            transform: translateY(-50%);
+            width: 60%;
+            max-width: 700px;
+            height: auto; /* Automatická výška */
+            max-height: 400px; /* Maximální výška pro poznámky */
+        }
+
+        .calculator-display {
+            background-color: #444;
+            color: #eee;
+            padding: 15px;
+            text-align: right;
+            font-size: 1.5em;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .calculator-button {
+            background-color: #555;
+            color: #eee;
+            border: none;
+            padding: 15px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .calculator-button:hover {
+            background-color: #777;
+        }
+
+        .operator {
+            background-color: #f0ad4e;
+        }
+
+        .operator:hover {
+            background-color: #f3c073;
+        }
+
+        .equal {
+            background-color: #5cb85c;
+            grid-column: span 2;
+        }
+
+        .equal:hover {
+            background-color: #77d177;
+        }
+
+        .video-player-controls {
+            display: flex;
+            align-items: center; /* Zarovnání ovládacích prvků na střed svisle */
+            margin-top: 15px;
+            width: 100%;
+            flex-direction: row; /* Ovládací prvky v řadě */
+            justify-content: center; /* Zarovnání ovládacích prvků na střed vodorovně */
+            gap: 10px; /* Mezery mezi ovládacími prvky */
+        }
+
+        .video-player-controls button, .video-player-controls input[type="range"], .video-player-controls label {
+            margin: 5px; /* Menší okraje */
+        }
+
+        .video-player-controls input[type="range"] {
+            width: 50%; /* Menší šířka pro posuvníky */
+            max-width: 300px;
+        }
+
+        .video-player-controls input[type="file"] {
+            color: transparent;
+            background-color: #444;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .video-player-controls input[type="file"]:hover {
+            background-color: #666;
+        }
+
+        #notes-window textarea {
+            width: 100%;
+            min-height: 150px;
+            background-color: #444;
+            color: #eee;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 1em;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div class="desktop">
+        <div class="icons-container">
+            <div class="icon-link" onclick="openApp('calculator')">
+                <i class="fas fa-calculator icon"></i>
+                <span>Kalkulačka</span>
+            </div>
+            <div class="icon-link" onclick="openApp('video-player')">
+                <i class="fas fa-play-circle icon"></i>
+                <span>Přehrávač videa</span>
+            </div>
+            <div class="icon-link" onclick="openApp('notes')">
+                <i class="fas fa-sticky-note icon"></i>
+                <span>Poznámky</span>
+            </div>
+            </div>
+
+        <div id="calculator-window" class="window">
+            <div class="window-header">
+                <span>Kalkulačka</span>
+                <span class="window-close" onclick="closeApp('calculator')">&times;</span>
+            </div>
+            <div id="display" class="calculator-display">0</div>
+            <div class="calculator-buttons">
+                <button class="calculator-button" onclick="clearDisplay()">C</button>
+                <button class="calculator-button operator" onclick="appendOperator('/')">/</button>
+                <button class="calculator-button operator" onclick="appendOperator('*')">*</button>
+                <button class="calculator-button" onclick="appendNumber('7')">7</button>
+                <button class="calculator-button" onclick="appendNumber('8')">8</button>
+                <button class="calculator-button" onclick="appendNumber('9')">9</button>
+                <button class="calculator-button operator" onclick="appendOperator('-')">-</button>
+                <button class="calculator-button" onclick="appendNumber('4')">4</button>
+                <button class="calculator-button" onclick="appendNumber('5')">5</button>
+                <button class="calculator-button" onclick="appendNumber('6')">6</button>
+                <button class="calculator-button operator" onclick="appendOperator('+')">+</button>
+                <button class="calculator-button" onclick="appendNumber('1')">1</button>
+                <button class="calculator-button" onclick="appendNumber('2')">2</button>
+                <button class="calculator-button" onclick="appendNumber('3')">3</button>
+                <button class="calculator-button" onclick="appendNumber('0')">0</button>
+                <button class="calculator-button" onclick="appendDecimal()">.</button>
+                <button class="calculator-button equal" onclick="calculate()">=</button>
+            </div>
+        </div>
+
+        <div id="video-player-window" class="window">
+            <div class="window-header">
+                <span>Přehrávač videa</span>
+                <span class="window-close" onclick="closeApp('video-player')">&times;</span>
+            </div>
+            <input type="file" id="fileInput" accept="video/*" onchange="loadVideo(event)" title="Nahrát video">
+            <video id="videoPlayer" controls>
+                <source id="videoSource" src="" type="video/mp4">
+                Váš prohlížeč nepodporuje HTML5 video.
+            </video>
+            <div class="video-player-controls">
+                <button onclick="playPauseVideo()">
+                    <span id="playPauseIcon">►</span>
+                </button>
+                <button onclick="stopVideoPlayer()">Stop</button>
+                <label for="volume">Hlasitost</label>
+                <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="changeVolume()">
+                <label for="seekbar">Prohledávání</label>
+                <input type="range" id="seekbar" value="0" onchange="seekVideo()">
+            </div>
+        </div>
+
+        <div id="notes-window" class="window">
+            <div class="window-header">
+                <span>Poznámky</span>
+                <span class="window-close" onclick="closeApp('notes')">&times;</span>
+            </div>
+            <textarea placeholder="Sem si můžeš psát poznámky..."></textarea>
+        </div>
+    </div>
+
+    <script>
+        const windows = {
+            'calculator': document.getElementById('calculator-window'),
+            'video-player': document.getElementById('video-player-window'),
+            'notes': document.getElementById('notes-window')
+        };
+
+        function openApp(appName) {
+            if (windows[appName]) {
+                windows[appName].style.display = 'block';
+            }
+        }
+
+        function closeApp(appName) {
+            if (windows[appName]) {
+                windows[appName].style.display = 'none';
+            }
+        }
+
+        // Kalkulačka logika
+        const display = document.getElementById('display');
+        let currentInput = '';
+        let operator = null;
+        let previousInput = null;
+
+        function appendNumber(number) {
+            currentInput += number;
+            display.textContent = currentInput;
+        }
+
+        function appendOperator(op) {
+            if (currentInput === '') return;
+            if (previousInput !== null) {
+                calculate();
+            }
+            operator = op;
+            previousInput = currentInput;
+            currentInput = '';
+        }
+
+        function appendDecimal() {
+            if (currentInput.includes('.')) return;
+            currentInput += '.';
+            display.textContent = currentInput;
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            operator = null;
+            previousInput = null;
+            display.textContent = '0';
+        }
+
+        function calculate() {
+            if (operator === null || previousInput === null) return;
+
+            let result;
+            const prev = parseFloat(previousInput);
+            const current = parseFloat(currentInput);
+
+            if (isNaN(prev) || isNaN(current)) return;
+
+            switch (operator) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                case '*':
+                    result = prev * current;
+                    break;
+                case '/':
+                    if (current === 0) {
+                        result = 'Error';
+                    } else {
+                        result = prev / current;
+                    }
+                    break;
+                default:
+                    return;
+            }
+
+            currentInput = String(result);
+            operator = null;
+            previousInput = null;
+            display.textContent = currentInput;
+        }
+
+        // Přehrávač videa logika
+        const video = document.getElementById("videoPlayer");
+        const videoSource = document.getElementById("videoSource");
+        const seekbar = document.getElementById("seekbar");
+        const volumeControl = document.getElementById("volume");
+        const playPauseIcon = document.getElementById("playPauseIcon");
+
+        function playPauseVideo() {
+            if (video.paused) {
+                video.play();
+                playPauseIcon.textContent = "❚❚"; // Pauza
+            } else {
+                video.pause();
+                playPauseIcon.textContent = "►"; // Přehrát
+            }
+        }
+
+        function stopVideoPlayer() {
+            video.pause();
+            video.currentTime = 0;
+            playPauseIcon.textContent = "►"; // Přehrát
+        }
+
+        function changeVolume() {
+            video.volume = volumeControl.value;
+        }
+
+        video.addEventListener('timeupdate', () => {
+            const value = (video.currentTime / video.duration) * 100;
+            seekbar.value = value;
+        });
+
+        function seekVideo() {
+            const seekTime = (seekbar.value / 100) * video.duration;
+            video.currentTime = seekTime;
+        }
+
+        function loadVideo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const objectURL = URL.createObjectURL(file);
+                videoSource.src = objectURL;
+                video.load();
+                video.play();
+            }
+        }
+
+        video.volume = volumeControl.value; // Nastavení výchozí hlasitosti
+    </script>
+</body>
+</html>
