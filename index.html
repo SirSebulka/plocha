@@ -163,7 +163,7 @@
             flex-shrink: 0;
         }
 
-        /* Start menu */
+        /* Start menu - Zjednodušené */
         .start-menu {
             position: fixed;
             bottom: 40px;
@@ -176,9 +176,9 @@
             flex-direction: column;
             box-sizing: border-box;
             padding: 5px 0;
-            z-index: 15; /* Nižší než taskbar, ale vyšší než okna */
+            z-index: 15;
         }
-        .start-menu label {
+        .start-menu label, .start-menu button {
             background: none;
             border: none;
             color: white;
@@ -188,29 +188,14 @@
             width: 100%;
             font-size: 14px;
             box-sizing: border-box;
-            display: block; /* Důležité pro label */
+            display: block;
         }
-        .start-menu label:hover { background: #555; }
+        .start-menu label:hover, .start-menu button:hover { background: #555; }
         .start-menu input[type="file"] {
-            display: none; /* Skryje nativní tlačítko pro výběr souboru */
+            display: none; 
         }
 
-        /* Video přehrávač - Důležité pro skrytí/zobrazení ovládání */
-        .video-player-controls {
-            display: flex;
-            align-items: center;
-            margin-top: 15px;
-            width: 100%;
-            flex-direction: row;
-            justify-content: center;
-            gap: 10px;
-            cursor: default;
-            /* Nové styly pro plynulé skrývání */
-            opacity: 1; 
-            transition: opacity 0.3s ease; 
-        }
-
-        /* ... Ostatní styly pro okna, kalkulačku, hru (ponechány beze změny) ... */
+        /* Ostatní styly pro okna, kalkulačku, hru, přehrávač (beze změny) */
         #calculator-window {
             top: 50%;
             left: 10%;
@@ -288,6 +273,18 @@
         .equal { background-color: #5cb85c; grid-column: span 2; }
         .equal:hover { background-color: #77d177; }
         
+        .video-player-controls {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            width: 100%;
+            flex-direction: row;
+            justify-content: center;
+            gap: 10px;
+            cursor: default;
+            opacity: 1; 
+            transition: opacity 0.3s ease; 
+        }
         .video-player-controls button, .video-player-controls input[type="range"], .video-player-controls label {
             margin: 5px;
             cursor: pointer;
@@ -441,17 +438,17 @@
     </div>
 
     <div id="startMenu" class="start-menu">
-        <button onclick="openApp('calculator')">🧮 Kalkulačka</button>
-        <button onclick="openApp('notes')">📝 Poznámky</button>
-        <button onclick="openApp('video-player')">🎬 Přehrávač videa</button>
-        <button onclick="openApp('game')">🎮 Hra</button>
-        <hr>
+        <button onclick="toggleFullscreenMode()">
+            <i class="fas fa-expand-arrows-alt"></i> Celá obrazovka
+        </button>
         <label for="wallpaperInput">
-            Tapeta: <input type="file" id="wallpaperInput" accept="image/*" onchange="changeWallpaper(event)">
+            <i class="fas fa-image"></i> Tapeta
+            <input type="file" id="wallpaperInput" accept="image/*" onchange="changeWallpaper(event)">
         </label>
-        <label onclick="closeBrowserWindow()">
-            Ukončit
-        </label>
+        <hr>
+        <button onclick="closeBrowserWindow()">
+            <i class="fas fa-power-off"></i> Ukončit
+        </button>
     </div>
 
     <script>
@@ -537,7 +534,7 @@
             }
         }
         
-        // --- Funkce menu, hodin a tapety (Beze změny) ---
+        // --- Funkce menu, hodin a tapety ---
         function toggleStartMenu() {
             const menu = document.getElementById('startMenu');
             menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
@@ -561,7 +558,7 @@
                 now.toLocaleTimeString('cs-CZ', {hour: '2-digit', minute:'2-digit'});
         }, 1000);
 
-        // --- Funkce celá obrazovka (Beze změny) ---
+        // --- Celá obrazovka ---
         function requestFullscreen() {
             const element = document.documentElement;
             if (element.requestFullscreen) {
@@ -572,7 +569,30 @@
                 element.msRequestFullscreen();
             }
         }
+        
+        function exitFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
 
+        /**
+         * NOVÁ FUNKCE: Přepíná režim celé obrazovky na manuální kliknutí z menu.
+         */
+        function toggleFullscreenMode() {
+             if (document.fullscreenElement) {
+                exitFullscreen();
+            } else {
+                requestFullscreen();
+            }
+            document.getElementById('startMenu').style.display = 'none';
+        }
+        
+        // Ponecháno automatické spuštění pro první interakci
         let hasEnteredFullscreen = false;
         document.addEventListener('click', () => {
             if (!hasEnteredFullscreen) {
@@ -615,7 +635,7 @@
             currentInput=result.toString(); operator=null; prevValue=null; updateDisplay();
         }
 
-        // --- Kód přehrávače videa (UPRAVENO!) ---
+        // --- Kód přehrávače videa (S novými funkcemi) ---
         const videoPlayer = document.getElementById('videoPlayer');
         const videoSource = document.getElementById('videoSource');
         const playPauseIcon = document.getElementById('playPauseIcon');
@@ -626,7 +646,6 @@
         let hideControlsTimeout;
 
 
-        // NOVÁ FUNKCE: Skrývání a zobrazování ovládacích prvků
         const hideControls = () => {
             if (videoControls) {
                 videoControls.style.opacity = 0;
@@ -638,26 +657,23 @@
                 videoControls.style.opacity = 1;
             }
             clearTimeout(hideControlsTimeout);
-            // Skrýt ovládací prvky po 3 sekundách nečinnosti myši v okně
             hideControlsTimeout = setTimeout(hideControls, 3000); 
         };
 
-        // Přidat posluchač pohybu myši na okno přehrávače
         if (videoPlayerWindow) {
              videoPlayerWindow.addEventListener('mousemove', showControls);
         }
         
-        // NOVÁ FUNKCE: Ovládání hlasitosti kolečkem myši
+        // Ovládání hlasitosti kolečkem myši
         videoPlayer.addEventListener('wheel', (e) => {
-            e.preventDefault(); // Zabrání standardnímu posunu stránky
-            const volumeChange = e.deltaY > 0 ? -0.05 : 0.05; // Scroll dolů = snížit, nahoru = zvýšit
+            e.preventDefault();
+            const volumeChange = e.deltaY > 0 ? -0.05 : 0.05;
             videoPlayer.volume = Math.min(Math.max(videoPlayer.volume + volumeChange, 0), 1);
-            volumeControl.value = videoPlayer.volume; // Aktualizace posuvníku
-            showControls(); // Zobrazit ovládání pro zpětnou vazbu
+            volumeControl.value = videoPlayer.volume;
+            showControls();
         });
 
 
-        // Původní funkce přehrávače (Beze změny)
         function loadVideo(event) {
             const file = event.target.files[0];
             if (file) {
@@ -666,7 +682,7 @@
                 videoPlayer.load();
                 videoPlayer.play();
                 playPauseIcon.innerText = '❚❚';
-                showControls(); // Zobrazit ovládání po načtení
+                showControls();
             }
         }
 
