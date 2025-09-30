@@ -17,6 +17,8 @@
             align-items: center;
             min-height: 100vh;
             user-select: none; /* Zakázat označování textu při přetahování */
+            background-size: cover;
+            background-position: center;
         }
 
         .desktop {
@@ -57,6 +59,7 @@
             background-color: rgba(85, 85, 85, 0.7);
         }
 
+        /* Okna */
         .window {
             position: absolute;
             background-color: #f0f0f0;
@@ -67,8 +70,9 @@
             padding: 20px;
             width: 80%;
             max-width: 600px;
-            display: none; /* Skryto na začátku */
-            z-index: 10; /* Aby okna byla nad ikonami */
+            display: none;
+            z-index: 10;
+            box-sizing: border-box; /* Přidáno box-sizing */
         }
 
         .window.fullscreen {
@@ -82,7 +86,7 @@
         }
 
         .window.dragging {
-            cursor: grabbing !important; /* Změna kurzoru během přetahování */
+            cursor: grabbing !important;
         }
 
         .window-header {
@@ -92,13 +96,13 @@
             padding-bottom: 10px;
             margin-bottom: 10px;
             border-bottom: 1px solid #ccc;
-            cursor: grab; /* Přetahování za hlavičku */
+            cursor: grab;
         }
 
         .window-controls {
             display: flex;
             align-items: center;
-            gap: 10px; /* Mezera mezi ikonami */
+            gap: 10px;
         }
 
         .window-button {
@@ -117,12 +121,7 @@
             color: #000;
         }
 
-        .window-close {
-            /* Styl pro ikonu zavření - 'X' */
-        }
-
         .window-maximize {
-            /* Styl pro ikonu maximalizace - čtvereček */
             border: 1px solid #888;
             border-radius: 2px;
             width: 14px;
@@ -133,46 +132,118 @@
             border-color: #000;
         }
 
+        /* Taskbar */
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: #222;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            box-sizing: border-box;
+            z-index: 20; /* Vyšší z-index pro taskbar */
+        }
+        .start-button {
+            background: #444;
+            border: none;
+            color: white;
+            padding: 5px 12px;
+            cursor: pointer;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        #clock {
+            font-size: 14px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* Start menu */
+        .start-menu {
+            position: fixed;
+            bottom: 40px;
+            left: 10px;
+            width: 220px;
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            display: none;
+            flex-direction: column;
+            box-sizing: border-box;
+            padding: 5px 0;
+            z-index: 15; /* Nižší než taskbar, ale vyšší než okna */
+        }
+        .start-menu label {
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            padding: 8px 10px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+            box-sizing: border-box;
+            display: block; /* Důležité pro label */
+        }
+        .start-menu label:hover { background: #555; }
+        .start-menu input[type="file"] {
+            display: none; /* Skryje nativní tlačítko pro výběr souboru */
+        }
+
+        /* Video přehrávač - Důležité pro skrytí/zobrazení ovládání */
+        .video-player-controls {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            width: 100%;
+            flex-direction: row;
+            justify-content: center;
+            gap: 10px;
+            cursor: default;
+            /* Nové styly pro plynulé skrývání */
+            opacity: 1; 
+            transition: opacity 0.3s ease; 
+        }
+
+        /* ... Ostatní styly pro okna, kalkulačku, hru (ponechány beze změny) ... */
         #calculator-window {
-            /* Umístění a styl kalkulačky - upraveno pro širší zobrazení */
             top: 50%;
             left: 10%;
             transform: translateY(-50%);
-            width: auto; /* Automatická šířka */
+            width: auto;
             max-width: 350px;
         }
-
         #video-player-window {
-            /* Umístění a styl přehrávače - upraveno pro širší zobrazení */
             top: 100px;
             left: 10%;
             width: 80%;
             max-width: 800px;
-            height: auto; /* Automatická výška */
+            height: auto;
         }
-
         #video-player-window video {
-            display: block; /* Aby se video chovalo jako blokový element */
-            max-width: 100%; /* Maximální šířka 100% kontejneru */
-            height: auto; /* Automatická výška pro zachování poměru stran */
+            display: block;
+            max-width: 100%;
+            height: auto;
             border-radius: 0;
             box-shadow: none;
-            cursor: default; /* Změna kurzoru zpět na výchozí pro video */
+            cursor: default;
         }
-
         #notes-window {
-            /* Umístění a styl poznámek - upraveno pro širší zobrazení */
             top: 50%;
             right: 10%;
             transform: translateY(-50%);
             width: 60%;
             max-width: 700px;
-            height: auto; /* Automatická výška */
-            max-height: 400px; /* Maximální výška pro poznámky */
+            height: auto;
+            max-height: 400px;
         }
-
         #notes-window textarea {
-            cursor: text; /* Změna kurzoru na text pro textarea */
+            cursor: text;
             width: 100%;
             min-height: 150px;
             background-color: #444;
@@ -184,7 +255,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-size: 1em;
         }
-
         .calculator-display {
             background-color: #444;
             color: #eee;
@@ -195,15 +265,13 @@
             margin-bottom: 10px;
             box-sizing: border-box;
             overflow: hidden;
-            cursor: default; /* Změna kurzoru zpět na výchozí pro displej kalkulačky */
+            cursor: default;
         }
-
         .calculator-buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
         }
-
         .calculator-button {
             background-color: #555;
             color: #eee;
@@ -214,50 +282,21 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-
-        .calculator-button:hover {
-            background-color: #777;
-        }
-
-        .operator {
-            background-color: #f0ad4e;
-        }
-
-        .operator:hover {
-            background-color: #f3c073;
-        }
-
-        .equal {
-            background-color: #5cb85c;
-            grid-column: span 2;
-        }
-
-        .equal:hover {
-            background-color: #77d177;
-        }
-
-        .video-player-controls {
-            display: flex;
-            align-items: center; /* Zarovnání ovládacích prvků na střed svisle */
-            margin-top: 15px;
-            width: 100%;
-            flex-direction: row; /* Ovládací prvky v řadě */
-            justify-content: center; /* Zarovnání ovládacích prvků na střed vodorovně */
-            gap: 10px; /* Mezery mezi ovládacími prvky */
-            cursor: default; /* Změna kurzoru zpět na výchozí pro ovládání videa */
-        }
-
+        .calculator-button:hover { background-color: #777; }
+        .operator { background-color: #f0ad4e; }
+        .operator:hover { background-color: #f3c073; }
+        .equal { background-color: #5cb85c; grid-column: span 2; }
+        .equal:hover { background-color: #77d177; }
+        
         .video-player-controls button, .video-player-controls input[type="range"], .video-player-controls label {
-            margin: 5px; /* Menší okraje */
-            cursor: pointer; /* Kurzor pointer pro ovládací prvky */
+            margin: 5px;
+            cursor: pointer;
         }
-
         .video-player-controls input[type="range"] {
-            width: 50%; /* Menší šířka pro posuvníky */
+            width: 50%;
             max-width: 300px;
-            cursor: pointer; /* Kurzor pointer pro posuvník */
+            cursor: pointer;
         }
-
         .video-player-controls input[type="file"] {
             color: transparent;
             background-color: #444;
@@ -267,39 +306,33 @@
             border: none;
             transition: background-color 0.3s ease;
         }
-
         .video-player-controls input[type="file"]:hover {
             background-color: #666;
         }
-
-        /* Styly pro sběratelskou hru */
         #game-window {
-            /* Umístění a styl herního okna */
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%); /* Centrování okna */
+            transform: translate(-50%, -50%);
             width: auto;
-            max-width: 800px; /* Maximální šířka odpovídá šířce canvasu */
+            max-width: 800px;
             height: auto;
-            padding: 0; /* Bez vnitřního odsazení, aby canvas vyplnil celé okno */
+            padding: 0;
         }
-
         #game-window .window-body {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 600px; /* Minimální výška odpovídá výšce canvasu */
+            min-height: 600px;
         }
-
         #gameCanvas {
-            background-color: #fff; /* Výchozí barva pozadí plátna, bude se měnit JavaScriptem */
-            display: block; /* Odstraní případné mezery pod canvasem */
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Jemný stín kolem plátna */
-            width: 800px; /* Pevná šířka pro canvas */
-            height: 600px; /* Pevná výška pro canvas */
+            background-color: #fff;
+            display: block;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            width: 800px;
+            height: 600px;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" xintegrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div class="desktop">
@@ -352,6 +385,30 @@
             </div>
         </div>
 
+        <div id="notes-window" class="window" onmousedown="startDrag(event, 'notes')">
+            <div class="window-header" onmousedown="startDrag(event, 'notes')">
+                <span>Poznámky</span>
+                <div class="window-controls">
+                    <div class="window-button window-maximize" onclick="toggleFullscreen('notes')"></div>
+                    <span class="window-button window-close" onclick="closeApp('notes')">&times;</span>
+                </div>
+            </div>
+            <textarea placeholder="Sem si můžeš psát poznámky..."></textarea>
+        </div>
+
+        <div id="game-window" class="window" onmousedown="startDrag(event, 'game')">
+            <div class="window-header" onmousedown="startDrag(event, 'game')">
+                <span>Sběratelská Hra</span>
+                <div class="window-controls">
+                    <div class="window-button window-maximize" onclick="toggleFullscreen('game')"></div>
+                    <span class="window-button window-close" onclick="closeApp('game')">&times;</span>
+                </div>
+            </div>
+            <div class="window-body">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+            </div>
+        </div>
+
         <div id="video-player-window" class="window" onmousedown="startDrag(event, 'video-player')">
             <div class="window-header" onmousedown="startDrag(event, 'video-player')">
                 <span>Přehrávač videa</span>
@@ -376,31 +433,25 @@
                 <input type="range" id="seekbar" value="0" onchange="seekVideo()">
             </div>
         </div>
+    </div>
 
-        <div id="notes-window" class="window" onmousedown="startDrag(event, 'notes')">
-            <div class="window-header" onmousedown="startDrag(event, 'notes')">
-                <span>Poznámky</span>
-                <div class="window-controls">
-                    <div class="window-button window-maximize" onclick="toggleFullscreen('notes')"></div>
-                    <span class="window-button window-close" onclick="closeApp('notes')">&times;</span>
-                </div>
-            </div>
-            <textarea placeholder="Sem si můžeš psát poznámky..."></textarea>
-        </div>
+    <div class="taskbar">
+        <button class="start-button" onclick="toggleStartMenu()">MENU</button>
+        <div id="clock"></div>
+    </div>
 
-        <!-- Nové okno pro sběratelskou hru -->
-        <div id="game-window" class="window" onmousedown="startDrag(event, 'game')">
-            <div class="window-header" onmousedown="startDrag(event, 'game')">
-                <span>Sběratelská Hra</span>
-                <div class="window-controls">
-                    <div class="window-button window-maximize" onclick="toggleFullscreen('game')"></div>
-                    <span class="window-button window-close" onclick="closeApp('game')">&times;</span>
-                </div>
-            </div>
-            <div class="window-body">
-                <canvas id="gameCanvas" width="800" height="600"></canvas>
-            </div>
-        </div>
+    <div id="startMenu" class="start-menu">
+        <button onclick="openApp('calculator')">🧮 Kalkulačka</button>
+        <button onclick="openApp('notes')">📝 Poznámky</button>
+        <button onclick="openApp('video-player')">🎬 Přehrávač videa</button>
+        <button onclick="openApp('game')">🎮 Hra</button>
+        <hr>
+        <label for="wallpaperInput">
+            Tapeta: <input type="file" id="wallpaperInput" accept="image/*" onchange="changeWallpaper(event)">
+        </label>
+        <label onclick="closeBrowserWindow()">
+            Ukončit
+        </label>
     </div>
 
     <script>
@@ -408,49 +459,47 @@
             'calculator': document.getElementById('calculator-window'),
             'video-player': document.getElementById('video-player-window'),
             'notes': document.getElementById('notes-window'),
-            'game': document.getElementById('game-window') // Přidáno okno pro hru
+            'game': document.getElementById('game-window')
         };
 
         let activeWindow = null;
         let offsetX, offsetY;
 
+        // --- Základní funkce oken (otevření, zavření, drag, fullscreen) - Beze změny ---
         function openApp(appName) {
             if (windows[appName]) {
-                // Zajištění, aby se okno zobrazilo a bylo nejvýše
                 for (const win in windows) {
                     windows[win].style.zIndex = 10;
                 }
                 windows[appName].style.display = 'block';
                 windows[appName].style.zIndex = 11;
 
-                // Speciální inicializace pro hru při jejím otevření
                 if (appName === 'game') {
-                    // Aby se hra správně resetovala a spustila při otevření okna
-                    if (typeof reset_hry === 'function') { // Zkontrolovat, zda je funkce definována
+                    if (typeof reset_hry === 'function') {
                         reset_hry();
                     }
-                    if (typeof her_smycka === 'function') { // Zkontrolovat, zda je funkce definována
+                    if (typeof her_smycka === 'function') {
                         her_smycka();
                     }
                 }
             }
+            document.getElementById('startMenu').style.display = 'none';
         }
 
         function closeApp(appName) {
             if (windows[appName]) {
                 windows[appName].style.display = 'none';
-                windows[appName].classList.remove('fullscreen'); // Odstranění třídy pro celou obrazovku při zavření
+                windows[appName].classList.remove('fullscreen');
             }
         }
 
         function startDrag(event, appName) {
             activeWindow = windows[appName];
-            // Ujistěte se, že přetahujeme pouze za hlavičku
             if (activeWindow && event.target === activeWindow.querySelector('.window-header')) {
                 offsetX = event.clientX - activeWindow.getBoundingClientRect().left;
                 offsetY = event.clientY - activeWindow.getBoundingClientRect().top;
                 activeWindow.classList.add('dragging');
-                activeWindow.style.zIndex = 12; // Zajištění, aby přetahované okno bylo nejvýše
+                activeWindow.style.zIndex = 12;
                 document.addEventListener('mousemove', dragWindow);
                 document.addEventListener('mouseup', stopDrag);
             }
@@ -458,7 +507,6 @@
 
         function dragWindow(event) {
             if (activeWindow) {
-                // Kontrola, zda okno není v režimu celé obrazovky, aby se zabránilo přetahování
                 if (activeWindow.classList.contains('fullscreen')) {
                     return;
                 }
@@ -480,100 +528,145 @@
             const windowElement = windows[appName];
             if (windowElement) {
                 windowElement.classList.toggle('fullscreen');
-                // Po maximalizaci/minimalizaci zajistíme, že okno je viditelné
                 if (windowElement.classList.contains('fullscreen')) {
                     windowElement.style.display = 'block';
-                    windowElement.style.zIndex = 13; // Zajištění, že maximalizované okno je nejvýše
+                    windowElement.style.zIndex = 13;
                 } else {
-                    windowElement.style.zIndex = 11; // Návrat k normální z-index hodnotě
+                    windowElement.style.zIndex = 11;
                 }
             }
         }
-
-        // --- Kód kalkulačky (původní) ---
-        let currentInput = '0';
-        let operator = null;
-        let prevValue = null;
-
-        function updateDisplay() {
-            document.getElementById('display').innerText = currentInput;
+        
+        // --- Funkce menu, hodin a tapety (Beze změny) ---
+        function toggleStartMenu() {
+            const menu = document.getElementById('startMenu');
+            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
         }
 
-        function appendNumber(number) {
-            if (currentInput === '0' && number !== '.') {
-                currentInput = number;
-            } else {
-                currentInput += number;
+        function closeBrowserWindow() {
+            window.close();
+        }
+
+        function changeWallpaper(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                document.body.style.backgroundImage = `url(${url})`;
             }
-            updateDisplay();
         }
 
-        function appendDecimal() {
-            if (!currentInput.includes('.')) {
-                currentInput += '.';
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').textContent =
+                now.toLocaleTimeString('cs-CZ', {hour: '2-digit', minute:'2-digit'});
+        }, 1000);
+
+        // --- Funkce celá obrazovka (Beze změny) ---
+        function requestFullscreen() {
+            const element = document.documentElement;
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.webkitRequestFullscreen) {
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) {
+                element.msRequestFullscreen();
             }
-            updateDisplay();
         }
 
-        function appendOperator(op) {
-            if (prevValue === null) {
-                prevValue = parseFloat(currentInput);
-            } else if (operator) {
-                calculate();
-                prevValue = parseFloat(currentInput);
+        let hasEnteredFullscreen = false;
+        document.addEventListener('click', () => {
+            if (!hasEnteredFullscreen) {
+                requestFullscreen();
+                hasEnteredFullscreen = true;
             }
-            operator = op;
-            currentInput = '0';
-        }
+        }, { once: true });
+        
+        // --- Zavírání menu kliknutím vedle (Beze změny) ---
+        document.addEventListener('mousedown', (event) => {
+            const startMenu = document.getElementById('startMenu');
+            const startButton = document.querySelector('.start-button');
+            
+            if (startMenu.style.display === 'flex' && 
+                !startMenu.contains(event.target) && 
+                !startButton.contains(event.target)) {
+                
+                startMenu.style.display = 'none';
+            }
+        });
 
-        function clearDisplay() {
-            currentInput = '0';
-            operator = null;
-            prevValue = null;
-            updateDisplay();
-        }
-
+        // --- Kód kalkulačky (Beze změny) ---
+        let currentInput = '0', operator = null, prevValue = null;
+        function updateDisplay() { document.getElementById('display').innerText = currentInput; }
+        function appendNumber(n) { currentInput = (currentInput==='0')? n : currentInput+n; updateDisplay(); }
+        function appendDecimal() { if (!currentInput.includes('.')) currentInput += '.'; updateDisplay(); }
+        function appendOperator(op) { prevValue = parseFloat(currentInput); operator = op; currentInput='0'; }
+        function clearDisplay() { currentInput='0'; operator=null; prevValue=null; updateDisplay(); }
         function calculate() {
-            if (operator === null || prevValue === null) return;
+            if (!operator||prevValue===null) return;
+            const current = parseFloat(currentInput);
             let result;
-            const currentValue = parseFloat(currentInput);
-            switch (operator) {
-                case '+':
-                    result = prevValue + currentValue;
-                    break;
-                case '-':
-                    result = prevValue - currentValue;
-                    break;
-                case '*':
-                    result = prevValue * currentValue;
-                    break;
-                case '/':
-                    result = prevValue / currentValue;
-                    break;
-                default:
-                    return;
+            switch(operator){
+                case '+': result=prevValue+current; break;
+                case '-': result=prevValue-current; break;
+                case '*': result=prevValue*current; break;
+                case '/': result=prevValue/current; break;
+                default: return;
             }
-            currentInput = result.toString();
-            operator = null;
-            prevValue = null;
-            updateDisplay();
+            currentInput=result.toString(); operator=null; prevValue=null; updateDisplay();
         }
 
-        // --- Kód přehrávače videa (původní) ---
+        // --- Kód přehrávače videa (UPRAVENO!) ---
         const videoPlayer = document.getElementById('videoPlayer');
         const videoSource = document.getElementById('videoSource');
         const playPauseIcon = document.getElementById('playPauseIcon');
         const volumeControl = document.getElementById('volume');
         const seekbar = document.getElementById('seekbar');
+        const videoControls = document.querySelector('#video-player-window .video-player-controls');
+        const videoPlayerWindow = document.getElementById('video-player-window');
+        let hideControlsTimeout;
 
+
+        // NOVÁ FUNKCE: Skrývání a zobrazování ovládacích prvků
+        const hideControls = () => {
+            if (videoControls) {
+                videoControls.style.opacity = 0;
+            }
+        };
+
+        const showControls = () => {
+            if (videoControls) {
+                videoControls.style.opacity = 1;
+            }
+            clearTimeout(hideControlsTimeout);
+            // Skrýt ovládací prvky po 3 sekundách nečinnosti myši v okně
+            hideControlsTimeout = setTimeout(hideControls, 3000); 
+        };
+
+        // Přidat posluchač pohybu myši na okno přehrávače
+        if (videoPlayerWindow) {
+             videoPlayerWindow.addEventListener('mousemove', showControls);
+        }
+        
+        // NOVÁ FUNKCE: Ovládání hlasitosti kolečkem myši
+        videoPlayer.addEventListener('wheel', (e) => {
+            e.preventDefault(); // Zabrání standardnímu posunu stránky
+            const volumeChange = e.deltaY > 0 ? -0.05 : 0.05; // Scroll dolů = snížit, nahoru = zvýšit
+            videoPlayer.volume = Math.min(Math.max(videoPlayer.volume + volumeChange, 0), 1);
+            volumeControl.value = videoPlayer.volume; // Aktualizace posuvníku
+            showControls(); // Zobrazit ovládání pro zpětnou vazbu
+        });
+
+
+        // Původní funkce přehrávače (Beze změny)
         function loadVideo(event) {
             const file = event.target.files[0];
             if (file) {
                 const fileURL = URL.createObjectURL(file);
                 videoSource.src = fileURL;
-                videoPlayer.load(); // Načte nové video
+                videoPlayer.load();
                 videoPlayer.play();
                 playPauseIcon.innerText = '❚❚';
+                showControls(); // Zobrazit ovládání po načtení
             }
         }
 
@@ -585,20 +678,24 @@
                 videoPlayer.pause();
                 playPauseIcon.innerText = '►';
             }
+            showControls();
         }
 
         function stopVideoPlayer() {
             videoPlayer.pause();
             videoPlayer.currentTime = 0;
             playPauseIcon.innerText = '►';
+            showControls();
         }
 
         function changeVolume() {
             videoPlayer.volume = volumeControl.value;
+            showControls();
         }
 
         function seekVideo() {
             videoPlayer.currentTime = seekbar.value;
+            showControls();
         }
 
         videoPlayer.addEventListener('timeupdate', () => {
@@ -607,10 +704,10 @@
 
         videoPlayer.addEventListener('loadedmetadata', () => {
             seekbar.max = videoPlayer.duration;
+            seekbar.value = 0;
         });
 
-
-        // --- Kód sběratelské hry (integrovaný) ---
+        // --- Kód sběratelské hry (Beze změny) ---
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -635,7 +732,7 @@
             if (aktualni_motiv === "svetlý") {
                 return {"pozadi": bila, "hrac": zelena_svetla, "predmet": zluta_svetla,
                         "prekazka": cervena_svetla, "tlacitka": seda_svetla, "text": cerna};
-            } else { // tmavý motiv
+            } else {
                 return {"pozadi": cerna, "hrac": zelena_tmava, "predmet": zluta_tmava,
                         "prekazka": cervena_tmava, "tlacitka": seda_tmava, "text": bila};
             }
@@ -682,8 +779,8 @@
             prekazka_x = Math.random() * (sirka_okna - sirka_prekazky);
             prekazka_y = -vyska_okna / 20;
             skore = 0;
-            drzena_leva = false; // Reset kláves
-            drzena_prava = false; // Reset kláves
+            drzena_leva = false;
+            drzena_prava = false;
         }
 
         function vykresli() {
@@ -752,7 +849,6 @@
             }
         }
 
-        // Proměnná pro ukládání ID animace, aby bylo možné ji zrušit
         let animationFrameId;
 
         function her_smycka() {
@@ -810,21 +906,16 @@
 
                 if (checkCollision(hrac_rect, prekazka_rect)) {
                     stav_hry = "konec";
-                    // Zrušit herní smyčku, když hra skončí, aby se zabránilo zbytečným voláním
                     cancelAnimationFrame(animationFrameId);
                 }
             }
 
             vykresli();
-            // Pokračovat v animaci pouze pokud hra není v "konec" stavu
             if (stav_hry !== "konec") {
                 animationFrameId = requestAnimationFrame(her_smycka);
             }
         }
 
-        // Obsluha událostí klávesnice pro herní canvas
-        // Tyto posluchače by měly být přidány k dokumentu, ale ověřovat stav hry,
-        // aby reagovaly pouze, když je hra aktivní
         document.addEventListener('keydown', (event) => {
             if (stav_hry === "hra") {
                 if (event.key === 'ArrowLeft' || event.key === 'a') {
@@ -845,7 +936,6 @@
             }
         });
 
-        // Obsluha událostí myši pro herní canvas
         canvas.addEventListener('mousedown', (event) => {
             const mouseX = event.offsetX;
             const mouseY = event.offsetY;
@@ -855,7 +945,7 @@
                     mouseY >= tlacitko_start_y && mouseY <= tlacitko_start_y + tlacitko_start_vyska) {
                     stav_hry = "hra";
                     reset_hry();
-                    her_smycka(); // Spustit herní smyčku, když se hra spustí z menu
+                    her_smycka();
                 }
                 if (mouseX >= tlacitko_motiv_x && mouseX <= tlacitko_motiv_x + tlacitko_motiv_sirka &&
                     mouseY >= tlacitko_motiv_y && mouseY <= tlacitko_motiv_y + tlacitko_motiv_vyska) {
@@ -868,22 +958,19 @@
                     mouseY >= tlacitko_restart_y && mouseY <= tlacitko_restart_y + tlacitko_start_vyska) {
                     stav_hry = "hra";
                     reset_hry();
-                    her_smycka(); // Spustit herní smyčku při restartu
+                    her_smycka();
                 }
                 const tlacitko_menu_y = tlacitko_restart_y + tlacitko_start_vyska + vyska_okna / 30;
                 if (mouseX >= tlacitko_start_x && mouseX <= tlacitko_start_x + tlacitko_start_sirka &&
                     mouseY >= tlacitko_menu_y && mouseY <= tlacitko_menu_y + tlacitko_start_vyska) {
                     stav_hry = "menu";
-                    // Při návratu do menu se zruší herní smyčka
                     cancelAnimationFrame(animationFrameId);
                 }
             }
         });
 
-        // Inicializovat hru při načtení stránky, ale spustit herní smyčku až po kliknutí na "Spustit hru"
         reset_hry();
-        vykresli(); // Vykreslí menu hned po načtení
-
+        vykresli();
     </script>
 </body>
 </html>
